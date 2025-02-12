@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from 'react-redux';
-// import { type } from "@testing-library/user-event/dist/type";
 import Board from "./Board.js";
 
 class Game extends React.Component {
@@ -10,10 +9,15 @@ class Game extends React.Component {
     super(props);
     this.state = {
       history: [Array(9).fill(null)],
-      currentMove: true,
-      xIsNext: 1
+      currentMove: 0,
+      xIsNext: true,
+      currentSquares: Array(9).fill(null)
     };
   }
+
+
+  // currentMove = 0
+  // history = useState([Array(9).fill(null)])
 
   // const [history, setHistory] = useState([Array(9).fill(null)]);
   // const [currentMove, setCurrentMove] = useState(0);
@@ -21,13 +25,17 @@ class Game extends React.Component {
   // const currentSquares = history[currentMove];
 
   handlePlay = (nextSquares) => {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
-    setHistory(nextHistory);
-    setCurrentMove(nextHistory.length - 1);
+    const { dispatch } = this.props;
+    console.log(this.props)
+    const nextHistory = [this.props.history.slice(0, this.props.currentMove + 1), nextSquares];
+    dispatch({
+      type: "PLAY", history: nextHistory, currentMove : (nextHistory.length - 1)
+    })
+    // this.state.history = nextHistory;
   };
 
   jumpTo = (nextMove) => {
-    setCurrentMove(nextMove);
+    currentMove = (nextMove);
   };
 
   // const moves = history.map((squares, move) => {
@@ -44,15 +52,25 @@ class Game extends React.Component {
   //   );
   // });
 
-  
   render() {
     return (
       <React.Fragment>
-        <Board>
+        <Board xIsNext={this.state.xIsNext} squares={this.state.currentSquares} onPlay={this.handlePlay}>
         </Board>
       </React.Fragment>
     );
   }
-  
 }
+
+const mapStateToProps = state => {
+  return {
+    history: state.history,
+    currentMove: state.currentMove,
+    xIsNext: state.xIsNext,
+    currentSquares: state.currentSquares
+  };
+};
+
+Game = connect(mapStateToProps)(Game);
+
 export default Game;
