@@ -3,11 +3,11 @@ const defaultState = {
   currentMove: 0,
   xIsNext: true,
   currentSquares: Array(9).fill(null)
-}
+};
 
 const reducer = (state = defaultState, action) => {
   const { history, currentMove, xIsNext, currentSquares } = action;
-  switch (action) {
+  switch (action.type) {
     case 'PLAY':
       return Object.assign({}, state, {
         history: history,

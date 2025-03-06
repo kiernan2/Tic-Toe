@@ -1,25 +1,22 @@
-function Board ({ xIsNext, squares, onPlay }) {
-  
+function Board({ xIsNext, squares, onPlay }) {
+
   function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
-      return;
-    }
-    const nextSquares = squares.slice();
+    let nextSquare;
     if (xIsNext) {
-      nextSquares[i] = "X";
+      nextSquare = "X";
     } else {
-      nextSquares[i] = "O";
+      nextSquare = "O";
     }
-    onPlay(nextSquares);
+    onPlay(nextSquare, i);
   }
-  
+
   function Square({ value, onSquareClick }) {
     return (
-    <button className="square" onClick={onSquareClick} >{value}</button>
+      <button className="square" onClick={onSquareClick}>{value !== null ? value : "_"}</button>
     );
   }
 
-  calculateWinner = (squares) => {
+  const calculateWinner = (squares) => {
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
@@ -32,14 +29,14 @@ function Board ({ xIsNext, squares, onPlay }) {
     ];
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
-      if (squares[a] != null  && squares[a] === squares[b] && squares[a] === squares[c]) {
+      if (squares[a] !== null && squares[a] === squares[b] && squares[a] === squares[c]) {
         return squares[a];
       }
     }
     return null;
   };
 
-  return(
+  return (
     <>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
