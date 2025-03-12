@@ -16,13 +16,13 @@ class Game extends React.Component {
 
   handlePlay = (nextSquares, i) => {
     const { dispatch } = this.props;
-
-    const boardState = {...this.props.currentSquares};
+    const boardState =  [...this.props.currentSquares];
     boardState[i] = nextSquares;
     const nextHistory = [...this.props.history].concat(boardState);
+    console.log(calculateWinner(boardState))
 
     dispatch({
-      type: "PLAY", history: nextHistory, currentMove : (nextHistory.length - 1), xIsNext: !(this.props.xIsNext) , currentSquares: boardState
+      type: "PLAY", history: nextHistory, currentMove: (nextHistory.length - 1), xIsNext: !(this.props.xIsNext), currentSquares: boardState
     });
   };
 
@@ -39,6 +39,41 @@ class Game extends React.Component {
     );
   }
 }
+
+function getAllIndexes(arr, val) {
+  var indexes = [], i = -1;
+  while ((i = arr.indexOf(val, i + 1)) != -1) {
+    indexes.push(i);
+  }
+  return indexes;
+}
+
+const calculateWinner = (boardState) => {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  const playerOnePositions = getAllIndexes(boardState, "X");
+  const playerTwoPositions = getAllIndexes(boardState, "O");
+
+  lines.forEach(element => {
+    if (playerOnePositions.includes(element[0]) && playerOnePositions.includes(element[1]) && playerOnePositions.includes(element[2])) {
+      console.log("playerOneWin")
+      return true }
+    else if (playerTwoPositions.includes(element[0]) && playerTwoPositions.includes(element[1]) && playerTwoPositions.includes(element[2])) {
+      console.log("playerTwoWin")
+      return true }
+    else {return false}
+  });
+
+};
 
 const mapStateToProps = state => {
   return {
